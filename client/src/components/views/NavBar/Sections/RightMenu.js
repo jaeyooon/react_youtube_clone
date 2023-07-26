@@ -19,7 +19,7 @@ function RightMenu(props) {
     });
   };
 
-  if (user.userData && !user.userData.isAuth) {
+  if (user.userData && !user.userData.isAuth) {   // 로그인하지 않은 사람들은 이곳이 렌터링됨
     return (
       <Menu mode={props.mode}>
         <Menu.Item key="mail">
@@ -30,9 +30,12 @@ function RightMenu(props) {
         </Menu.Item>
       </Menu>
     )
-  } else {
+  } else {  // 로그인한 사람들은 이곳이 렌더링됨
     return (
       <Menu mode={props.mode}>
+        <Menu.Item key="upload">
+          <a href="/video/upload">Video</a>
+        </Menu.Item>
         <Menu.Item key="logout">
           <a onClick={logoutHandler}>Logout</a>
         </Menu.Item>
