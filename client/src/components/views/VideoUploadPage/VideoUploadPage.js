@@ -2,6 +2,8 @@ import React, {useState} from 'react'
 import { Typography, Button, Form, message, Input, Icon } from 'antd'
 import Dropzone from 'react-dropzone';
 import Axios from 'axios';
+import { useSelector } from 'react-redux';
+
 
 const { TextArea } = Input;
 const { Title } = Typography;
@@ -19,8 +21,8 @@ const CategoryOptions = [
     {value: 3, label: "Pets & Animals"}
 ]
 
-function VideoUploadPage() {
-
+function VideoUploadPage(props) {
+    const user = useSelector(state => state.user);  // redux의 state로 가서 user 정보를 가져오라는 의미, user의 모든 정보들이 user 변수에 다 담김
     // value들을 state에 넣어놓고 server에 보낼 때 state에 있는 것들을 한꺼번에 보낼 수 있음.
     const [VideoTitle, setVideoTitle] = useState("") 
     const [Description, setDescription] = useState("")
@@ -88,13 +90,44 @@ function VideoUploadPage() {
             })
     }
 
+    const onSubmit = (e) => {
+        e.preventDefault(); 
+
+        const variables = {     // MongoDB의 Video Collection에 넣어줘야 하므로
+            writer: user.userData._id,   // redux에서 user 데이터를 이미 갖고 있으므로 userId를 redux 통해 가져오면 됨(redux hook 사용)
+            title: VideoTitle,  // state에서 관리하고 있는 VideoTitle
+            description: Description,
+            privacy: Private,
+            filePath: FilePath,
+            category: Category,
+            duration: Duration,
+            thumbnail: ThumbnailPath,
+        }
+
+        Axios.post('/api/video/uploadVideo', variables) // 위 variables 를 가지고 request를 보냄
+            .then(response => { // request에 대한 respond
+                if(response.data.success) {
+                    
+                    message.success('성공적으로 업로드를 했습니다.')
+
+                    setTimeout(() => {  // 성공했을 경우, 3초 후에
+                        props.history.push('/')    // 시작페이지로 이동하도록
+                    }, 3000);    
+                                
+                } else {
+                    alert('비디오 업로드에 실패하였습니다.')
+                }
+            })
+
+    }
+
     return (
         <div style={{ maxWidth:'700px', margin:'2rem auto' }}>
                 <div style={{ textAlign:'center', marginBottom:'2rem' }}>
                     <Title level={2}>Upload Video</Title>
                 </div>
 
-                <Form onSubmit>
+                <Form onSubmit={onSubmit}>
                     <div style={{ display:'flex', justifyContent:'space-between' }}>
                             {/* Drop zone */}
 
@@ -152,7 +185,7 @@ function VideoUploadPage() {
                     </select>
                     <br/>
                     <br/>
-                    <Button type="primary" size="large" onClick>
+                    <Button type="primary" size="large" onClick={onSubmit}>
                         Submit
                     </Button>
 
