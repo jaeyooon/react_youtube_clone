@@ -5,6 +5,7 @@ const router = express.Router();
 const { auth } = require("../middleware/auth");
 const path = require('path');
 const multer = require("multer");
+var ffmpeg = require("fluent-ffmpeg");
 
 
 // STROAGE MULTER CONFIG
@@ -47,6 +48,51 @@ router.post('/uploadfiles', (req, res) => {
     })
 })
 
+
+router.post('/thumbnail', (req, res) => {
+    
+    // 썸네일 생성하고 비디오 러닝타임도 가져오기
+
+    let thumbsFilePath ="";
+    let fileDuration = ""
+
+    // ----- 비디오 정보 가져오기
+    ffmpeg.setFfmpegPath("C:\\Program Files\\ffmpeg\\bin\\ffmpeg.exe");
+
+    ffmpeg.ffprobe(req.body.url, function(err, metadata){
+        console.dir(metadata);  // all metadata
+        console.log(metadata.format.duration);
+
+        fileDuration = metadata.format.duration;    // fileDuration은 비디오 러닝타임
+    })
+
+    // ----- 썸네일 생성
+    ffmpeg(req.body.url)    // req.body.url는 client로부터 온 비디오 저장 경로
+    .on('filenames', function (filenames) { // 비디오 썸네일 파일 이름 생성
+        console.log('Will generate ' + filenames.join(', '))
+        console.log(filenames)
+
+        thumbsFilePath = "uploads/thumbnails/" + filenames[0];
+    })
+    .on('end', function () { // end는 썸네일을 생성하고 난 후에 할 것들
+        console.log('Screenshots taken');
+        return res.json({ success: true, thumbsFilePath: thumbsFilePath, fileDuration: fileDuration});   // 썸네일 생성 성공했을 경우
+    })                                                                                  
+    .on('error', function (err) {   // 썸네일 생성 실패했을 경우
+        console.error(err);
+        return res.json({ success: false, err });
+    })
+    .screenshots({  // 옵션을 주는 것
+        // Will take screens at 20%, 40%, 60% and 80% of the video
+        count: 3,   // 3개의 썸네일을 띄울 수 있음
+        folder: 'uploads/thumbnails',   // 해당 경로에 썸네일이 저장됨
+        size:'320x240', // 썸네일 사이즈
+        // %b input basename ( filename w/o extension )
+        filename:'thumbnail-%b.png' // 썸네일 파일 이름 형식
+    });
+
+
+})
 
 
 module.exports = router;
