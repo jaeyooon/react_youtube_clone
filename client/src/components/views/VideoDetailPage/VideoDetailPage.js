@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Row, Col, List, Avatar } from 'antd'; // 반응형 웹을 위해
 import Axios from 'axios';
+import SideVideo from './Sections/SideVideo';
 
 function VideoDetailPage(props) {
 
@@ -25,6 +26,7 @@ function VideoDetailPage(props) {
     if(VideoDetail.writer) {
         return ( 
             <Row gutter={[16, 16]}>
+                {/* ----- 하나의 비디오 영상 나오는 부분 ----- */}
                 <Col lg={18} xs={24}>
     
                 <div style={{ width: '100%', padding: '3rem 4rem' }}>
@@ -45,8 +47,9 @@ function VideoDetailPage(props) {
     
                 </div>
                 </Col>
+                {/* ----- Side Videos 나오는 부분 ----- */}
                 <Col lg={6} xs={24}>
-                    Side Videos
+                    <SideVideo />
                 </Col>
             </Row>
       )

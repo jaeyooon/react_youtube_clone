@@ -7,9 +7,8 @@ const path = require('path');
 const multer = require("multer");
 var ffmpeg = require("fluent-ffmpeg");
 
-
 // STROAGE MULTER CONFIG
-let storage = multer.diskStorage({
+let storage = multer.diskStorage({ 
     destination: (req, file, cb) => {   // 파일을 올리면 어디에 저장할지 설정
         cb(null, "uploads/");   // 파일을 uploads 폴더에 저장
     },
@@ -22,7 +21,7 @@ const fileFilter = (req, file, cb) => { // 비디오만 업로드할 수 있도�
     const typeArray = file.mimetype.split('/');
     const fileType = typeArray[1];
 
-    if(fileType == 'mp4') {
+    if(fileType == 'mp4') { 
         cb(null, true);
     } else {
         cb({msg:'mp4 파일만 업로드 가능합니다.'}, false);
@@ -46,7 +45,18 @@ router.post('/uploadfiles', (req, res) => {
         }
         return res.json({ success: true, url: res.req.file.path, fileName: res.req.file.filename })    // 파일이 uploads 폴더에 저장된 경로를 url에 넣어서 client에 보내줌
     })
-})
+});
+
+
+router.post('/getVideoDetail', (req, res) => { 
+    // 클라이언트에서 보낸 postId를 넣어서 _id를 이용해서 비디오를 찾겠다는 것
+    Video.findOne({ "_id": req.body.videoId })
+        .populate('writer')  // populate을 함으로서 writer의 여러 정보들까지 가져오도록 함
+        .exec((err, videoDetail) => {
+            if(err) return res.status(400).send(err)
+            return res.status(200).json({ success: true, videoDetail })
+        })
+});
 
 
 router.post('/uploadVideo', (req, res) => {
@@ -60,7 +70,7 @@ router.post('/uploadVideo', (req, res) => {
         res.status(200).json({ success: true })      // status 200 성공 메세지와 함께 json형식으로 success: true 라고 보내줌
     })        
 
-})
+});
 
 
 router.get('/getVideos', (req, res) => {
@@ -73,7 +83,7 @@ router.get('/getVideos', (req, res) => {
             if (err) return res.status(400).send(err);
             res.status(200).json({ success: true, videos }) // success: true와 함께 모든 비디오 데이터를 클라이언트에 보냄
         })
-})
+});
 
 
 
@@ -120,7 +130,7 @@ router.post('/thumbnail', (req, res) => {
     });
 
 
-})
+});
 
 
 
