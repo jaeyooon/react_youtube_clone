@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Row, Col, List, Avatar } from 'antd'; // 반응형 웹을 위해
 import Axios from 'axios';
 import SideVideo from './Sections/SideVideo';
+import Subscribe from './Sections/Subscribe';
 
 function VideoDetailPage(props) {
 
@@ -33,7 +34,7 @@ function VideoDetailPage(props) {
                     <video style={{ width: '100%' }} src={`http://localhost:5000/${VideoDetail.filePath}`} controls />    {/* 백서버는 5000 */}
     
                     <List.Item
-                        actions
+                        actions={[<Subscribe userTo={VideoDetail.writer._id} userFrom={localStorage.getItem('userId')} />]} // 구독 기능,  userTo: 비디오 업로드한 유저, userFrom: 현재 로그인한 유저의 정보를 props로 넣음
                     >
                         <List.Item.Meta 
                             avatar={<Avatar src={VideoDetail.writer.image} />}
