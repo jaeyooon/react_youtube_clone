@@ -6,6 +6,7 @@ const { auth } = require("../middleware/auth");
 const path = require('path');
 const multer = require("multer");
 var ffmpeg = require("fluent-ffmpeg");
+const { Subscriber } = require('../models/Subscriber');
 
 // STROAGE MULTER CONFIG
 let storage = multer.diskStorage({ 
@@ -85,6 +86,32 @@ router.get('/getVideos', (req, res) => {
         })
 });
 
+
+router.post('/getSubscriptionVideos', (req, res) => {
+    
+    // ------- 자신의 Id를 가지고 구독하는 사람들을 찾는다.
+    Subscriber.find({ userFrom: req.body.userFrom })
+        .exec((err, subscriberInfo) => {  // subscriberInfo에 내가 구독하고 있는 사람들의 정보가 담겨있음.
+            if(err) return res.status(400).send(err);
+
+            let subscribedUser = [];    // arrqy 안에 userTo 정보(내가 구독하고 있는 사람들의 정보)를 넣어줌.
+
+            subscriberInfo.map((subscriber, i) => {
+                subscribedUser.push(subscriber.userTo);  // subscribedUser 변수 안에 userTo의 Id들이 들어가있음.
+            })
+
+            // ------- 찾은 사람들의 비디오를 가지고 온다.
+
+        Video.find({ writer : { $in: subscribedUser }})      // Video 모델 안에는 비디오를 업로드 한 유저의 Id가 있고 해당 Id를 통해 비디오를 가져올 수 있음. 
+        .populate('writer')                                // req.body.id는 1명일 땐 가능했지만, subscribedUser는 여러 명일 수도 있으므로 불가능 => $in이라는 메서드 사용
+        .exec((err, videos) => {
+            if(err) return res.status(400).send(err);
+            res.status(200).json({ success: true, videos }) // videos 정보를 프론트로 넘겨줌.
+        })
+
+    })
+  
+});
 
 
 router.post('/thumbnail', (req, res) => {
