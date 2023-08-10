@@ -3,6 +3,7 @@ import { Row, Col, List, Avatar } from 'antd'; // 반응형 웹을 위해
 import Axios from 'axios';
 import SideVideo from './Sections/SideVideo';
 import Subscribe from './Sections/Subscribe';
+import Comment from './Sections/Comment';
 
 function VideoDetailPage(props) {
 
@@ -26,7 +27,7 @@ function VideoDetailPage(props) {
 
     if(VideoDetail.writer) {
 
-        // 📌비디오 업로드 한 유저와 현재 로그인한 유저가 같지 않을 때만 구독 버튼 나타나도록 함 
+        // 비디오 업로드 한 유저와 현재 로그인한 유저가 같지 않을 때만 구독 버튼 나타나도록 함 
         const subscribeButton = VideoDetail.writer._id !== localStorage.getItem('userId') && <Subscribe userTo={VideoDetail.writer._id} userFrom={localStorage.getItem('userId')} />
 
         return ( 
@@ -48,8 +49,7 @@ function VideoDetailPage(props) {
                     </List.Item>
     
                     {/* Comments */}
-    
-    
+                    <Comment postId={videoId} />     {/* 📌Comment 컴포넌트 */}
                 </div>
                 </Col>
                 {/* ----- Side Videos 나오는 부분 ----- */}
