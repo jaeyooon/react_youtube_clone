@@ -25,6 +25,10 @@ function VideoDetailPage(props) {
     }, [])
 
     if(VideoDetail.writer) {
+
+        // 📌비디오 업로드 한 유저와 현재 로그인한 유저가 같지 않을 때만 구독 버튼 나타나도록 함 
+        const subscribeButton = VideoDetail.writer._id !== localStorage.getItem('userId') && <Subscribe userTo={VideoDetail.writer._id} userFrom={localStorage.getItem('userId')} />
+
         return ( 
             <Row gutter={[16, 16]}>
                 {/* ----- 하나의 비디오 영상 나오는 부분 ----- */}
@@ -34,7 +38,7 @@ function VideoDetailPage(props) {
                     <video style={{ width: '100%' }} src={`http://localhost:5000/${VideoDetail.filePath}`} controls />    {/* 백서버는 5000 */}
     
                     <List.Item
-                        actions={[<Subscribe userTo={VideoDetail.writer._id} userFrom={localStorage.getItem('userId')} />]} // 구독 기능,  userTo: 비디오 업로드한 유저, userFrom: 현재 로그인한 유저의 정보를 props로 넣음
+                        actions={[ subscribeButton ]} // 구독 기능,  userTo: 비디오 업로드한 유저, userFrom: 현재 로그인한 유저의 정보를 props로 넣음
                     >
                         <List.Item.Meta 
                             avatar={<Avatar src={VideoDetail.writer.image} />}
