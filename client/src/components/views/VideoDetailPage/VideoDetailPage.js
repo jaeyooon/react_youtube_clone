@@ -5,12 +5,14 @@ import SideVideo from './Sections/SideVideo';
 import Subscribe from './Sections/Subscribe';
 import Comment from './Sections/Comment';
 
+
 function VideoDetailPage(props) {
 
     const videoId = props.match.params.videoId  // videoId 가져옴
     const variable = { videoId: videoId }
 
     const [VideoDetail, setVideoDetail] = useState([])
+    const [Comments, setComments] = useState([])    // 하나의 비디오에 대한 모든 코멘트 정보들 state에 넣어줌
     
     useEffect(() => {
         
@@ -23,7 +25,22 @@ function VideoDetailPage(props) {
                 }
             })
 
+        Axios.post('/api/comment/getComments', variable)  // 📌비디오에 해당하는 모든 comment 데이터를 DB에서 가져오기 위해
+        .then(response => {
+            if(response.data.success) {
+                setComments(response.data.comments)
+                console.log(response.data.comments)
+            } else {
+                alert('코멘트 정보를 가져오는데 실패하였습니다.')
+            }
+        })
+
+
     }, [])
+
+    const refreshFunction = (newComment) => {   // ✨새롭게 작성되는 댓글들을 업데이트하기 위한 function
+        setComments(Comments.concat(newComment))    // 하위 컴포넌트에서 submit된 댓글들을 업데이트
+    }
 
     if(VideoDetail.writer) {
 
@@ -49,7 +66,7 @@ function VideoDetailPage(props) {
                     </List.Item>
     
                     {/* Comments */}
-                    <Comment postId={videoId} />     {/* 📌Comment 컴포넌트 */}
+                    <Comment refreshFunction={refreshFunction} commentLists={Comments} postId={videoId} />     {/* 📌Comment 컴포넌트, 상위 컴포넌트로부터 하나의 비디오에 대한 모든 코멘트 정보들을 받음 */}
                 </div>
                 </Col>
                 {/* ----- Side Videos 나오는 부분 ----- */}

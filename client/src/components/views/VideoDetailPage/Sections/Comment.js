@@ -1,6 +1,7 @@
 import Axios from 'axios'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'    /* functional component이므로 redux hook을 사용 */
+import SingleComment from './SingleComment'
 
 
 function Comment(props) {
@@ -29,6 +30,8 @@ function Comment(props) {
         .then(response => {
             if(response.data.success) {
                 console.log(response.data.result)
+                setcommentValue("")     // 코멘트 작성 완료 후엔 코멘트 작성 창이 지워지도록
+                props.refreshFunction(response.data.result) // ✨저장된 댓글을 부모 컴포넌트(VideoDetailPage)에 업데이트 하기위해
             } else {
                 alert('코멘트를 저장하지 못했습니다.')
             }
@@ -43,6 +46,17 @@ function Comment(props) {
 
         {/* Comment Lists */}
 
+        {props.commentLists && props.commentLists.map((comment, index) => (   /* props.commentLists가 있을 경우, map을 통해 SingleComment 컴포넌트에 prop으로 넣어줌 */
+            
+            // ✨대댓글이 없는 댓글일 경우에만 화면에 나타나도록
+            (!comment.responseTo &&
+                <SingleComment refreshFunction={props.refreshFunction} comment={comment} postId={videoId} />   /* SingleComment 컴포넌트 */
+            )
+            
+
+        ))}    
+
+       
 
         {/* Root Comment Form */}
 
