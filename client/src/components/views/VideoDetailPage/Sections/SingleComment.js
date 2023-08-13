@@ -17,7 +17,7 @@ function SingleComment(props) {
     }
 
     const onHandleChange = (event) => {
-        setCommentValue(event.currentTarget.CommentValue)
+        setCommentValue(event.currentTarget.value)  // 📌변수명 동일하게 할 것!!
     }
 
     const onSubmit = (event) => {
@@ -37,6 +37,7 @@ function SingleComment(props) {
             if(response.data.success) {
                 console.log(response.data.result)
                 setCommentValue("")
+                setOpenReply(false) // 대댓글 작성 완료 후엔 대댓글 창 안 나오도록
                 props.refreshFunction(response.data.result) // ✨저장된 댓글을 부모 컴포넌트(VideoDetailPage)에 업데이트 하기위해
             } else {
                 alert('코멘트를 저장하지 못했습니다.')

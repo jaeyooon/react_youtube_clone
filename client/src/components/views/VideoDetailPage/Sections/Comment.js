@@ -2,6 +2,7 @@ import Axios from 'axios'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'    /* functional component이므로 redux hook을 사용 */
 import SingleComment from './SingleComment'
+import ReplyComment from './ReplyComment'
 
 
 function Comment(props) {
@@ -50,7 +51,10 @@ function Comment(props) {
             
             // ✨대댓글이 없는 댓글일 경우에만 화면에 나타나도록
             (!comment.responseTo &&
-                <SingleComment refreshFunction={props.refreshFunction} comment={comment} postId={videoId} />   /* SingleComment 컴포넌트 */
+                <React.Fragment>
+                    <SingleComment refreshFunction={props.refreshFunction} comment={comment} postId={videoId} />   {/* SingleComment 컴포넌트 */}
+                    <ReplyComment parentCommentId={comment._id} postId={videoId} commentLists={props.commentLists} refreshFunction={props.refreshFunction} />  {/* 부모 컴포넌트로부터 props를 통해 parentCommentId & videoId & 비디오에 대한 모든 댓글 데이터를 받아옴 */}
+                </React.Fragment>
             )
             
 
