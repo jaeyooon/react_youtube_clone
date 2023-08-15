@@ -4,6 +4,7 @@ import Axios from 'axios';
 import SideVideo from './Sections/SideVideo';
 import Subscribe from './Sections/Subscribe';
 import Comment from './Sections/Comment';
+import LikeDislikes from './Sections/LikeDislikes';
 
 
 function VideoDetailPage(props) {
@@ -56,7 +57,8 @@ function VideoDetailPage(props) {
                     <video style={{ width: '100%' }} src={`http://localhost:5000/${VideoDetail.filePath}`} controls />    {/* 백서버는 5000 */}
     
                     <List.Item
-                        actions={[ subscribeButton ]} // 구독 기능,  userTo: 비디오 업로드한 유저, userFrom: 현재 로그인한 유저의 정보를 props로 넣음
+                        actions={[ <LikeDislikes video userId={localStorage.getItem('userId')}
+                        videoId={videoId} />, subscribeButton ]} // 구독 기능,  userTo: 비디오 업로드한 유저, userFrom: 현재 로그인한 유저의 정보를 props로 넣음, 📌LikeDislikes 컴포넌트
                     >
                         <List.Item.Meta 
                             avatar={<Avatar src={VideoDetail.writer.image} />}
