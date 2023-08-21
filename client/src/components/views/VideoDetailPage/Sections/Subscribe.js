@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 
-
 function Subscribe(props) {
 
     const [SubscribeNumber, setSubscribeNumber] = useState(0)
@@ -74,15 +73,19 @@ function Subscribe(props) {
 
     return (
         <div>
+            <span style={{marginRight:'7px'}}>
+                {SubscribeNumber} subscriber(s)
+            </span>
             <button 
                 style={{
                     backgroundColor: `${Subscribed ? '#AAAAAA' : '#CC0000'}`, borderRadius: '4px',  // 구독한 상태라면 회색, 구독 안한 상태면 빨간색
                     color: 'white', padding: '10px 16px',
-                    fontWeight: '500', fontSize: '1rem', textTransform: 'uppercase'
+                    fontWeight: '500', fontSize: '1rem', textTransform: 'uppercase', 
+                    border:'none', cursor:'pointer'
                 }}
                 onClick={onSubscribe}
             >
-                {SubscribeNumber} {Subscribed ? 'Subscribed' : 'Subscribe'}   {/* 구독을 한 상태이면 Subscribed, 안하고 있다면 Subscribe라고 뜸 */}
+                {Subscribed ? 'Subscribed' : 'Subscribe'}   {/* 구독을 한 상태이면 Subscribed, 안하고 있다면 Subscribe라고 뜸 */}
             </button>
         </div>
     )

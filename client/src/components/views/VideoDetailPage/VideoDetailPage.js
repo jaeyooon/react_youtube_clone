@@ -12,6 +12,7 @@ function VideoDetailPage(props) {
     const videoId = props.match.params.videoId  // videoId 가져옴
     const variable = { videoId: videoId }
 
+    const [Views, setViews] = useState(0)
     const [VideoDetail, setVideoDetail] = useState([])
     const [Comments, setComments] = useState([])    // 하나의 비디오에 대한 모든 코멘트 정보들 state에 넣어줌
     
@@ -26,7 +27,7 @@ function VideoDetailPage(props) {
                 }
             })
 
-        Axios.post('/api/comment/getComments', variable)  // 📌비디오에 해당하는 모든 comment 데이터를 DB에서 가져오기 위해
+        Axios.post('/api/comment/getComments', variable)  // 비디오에 해당하는 모든 comment 데이터를 DB에서 가져오기 위해
         .then(response => {
             if(response.data.success) {
                 setComments(response.data.comments)
@@ -36,11 +37,39 @@ function VideoDetailPage(props) {
             }
         })
 
+        Axios.post('/api/video/updateViews', variable)  // 📌비디호 조회 수 업데이트
+            .then(response => {
+                if(response.data.success) {
+                    setViews(response.data.views)
+                } else {
+                    alert('조회수를 반영하지 못하였습니다.')
+                }
+            })
 
     }, [])
 
     const refreshFunction = (newComment) => {   // ✨새롭게 작성되는 댓글들을 업데이트하기 위한 function
         setComments(Comments.concat(newComment))    // 하위 컴포넌트에서 submit된 댓글들을 업데이트
+    }
+
+    const refreshDeleteFunction = (targetCommentId) => {    // ✨DB에서 댓글을 삭제한 후에 state에서도 해당 댓글을 지워줘야하므로
+
+            // if(Comments.find((comment) => comment.responseTo === targetCommentId)) {
+            //     Comments.map((comment) => 
+            //     comment._id === targetCommentId
+            //        ? comment.content = "삭제된 댓글입니다." 
+            //        : comment
+            //     )
+            //     let newCommentList = [...Comments]
+            //     setComments(newCommentList)
+            // } else {
+                if(Comments.find((comment) => comment._id === targetCommentId)) {
+                    let newCommentList2 = [...Comments]
+                    newCommentList2 = Comments.filter((comment) => comment._id !== targetCommentId)
+                    setComments(newCommentList2)
+                }
+            // }
+
     }
 
     if(VideoDetail.writer) {
@@ -57,8 +86,9 @@ function VideoDetailPage(props) {
                     <video style={{ width: '100%' }} src={`http://localhost:5000/${VideoDetail.filePath}`} controls />    {/* 백서버는 5000 */}
     
                     <List.Item
-                        actions={[ <LikeDislikes video userId={localStorage.getItem('userId')}
-                        videoId={videoId} />, subscribeButton ]} // 구독 기능,  userTo: 비디오 업로드한 유저, userFrom: 현재 로그인한 유저의 정보를 props로 넣음, 📌LikeDislikes 컴포넌트
+                        actions={[ <span>{Views} views</span>, 
+                            <LikeDislikes video userId={localStorage.getItem('userId')} videoId={videoId} />, 
+                            subscribeButton ]} // 구독 기능,  userTo: 비디오 업로드한 유저, userFrom: 현재 로그인한 유저의 정보를 props로 넣음, 📌LikeDislikes 컴포넌트
                     >
                         <List.Item.Meta 
                             avatar={<Avatar src={VideoDetail.writer.image} />}
@@ -68,7 +98,7 @@ function VideoDetailPage(props) {
                     </List.Item>
     
                     {/* Comments */}
-                    <Comment refreshFunction={refreshFunction} commentLists={Comments} postId={videoId} />     {/* 📌Comment 컴포넌트, 상위 컴포넌트로부터 하나의 비디오에 대한 모든 코멘트 정보들을 받음 */}
+                    <Comment refreshDeleteFunction={refreshDeleteFunction}  refreshFunction={refreshFunction} commentLists={Comments} postId={videoId} />     {/* 📌Comment 컴포넌트, 상위 컴포넌트로부터 하나의 비디오에 대한 모든 코멘트 정보들을 받음 */}
                 </div>
                 </Col>
                 {/* ----- Side Videos 나오는 부분 ----- */}
@@ -79,7 +109,10 @@ function VideoDetailPage(props) {
       )
     } else {
         return (
-            <div>...loading</div>
+            <div>
+                <br/>
+                ...loading
+            </div>
         )
     }
    

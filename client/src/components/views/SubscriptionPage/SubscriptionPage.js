@@ -36,7 +36,7 @@ function SubscriptionPage() {
         return <Col lg={6} md={8} xs={24}>  {/*24사이즈가 전체 열 사이즈*/}           
                 <div style={{ position: 'relative' }}>
                     <a href={`/video/${video._id}`} > {/* 하나의 비디오에 해당하는 페이지로 이동하도록 video._id를 이용해서 링크를 걸어둠*/}
-                        <img style={{ width: '100%' }} src={`http://localhost:5000/${video.thumbnail}`} alt="thumbnail" />
+                        <img style={{ width: '100%', borderRadius: '10px' }} src={`http://localhost:5000/${video.thumbnail}`} alt="thumbnail" />
                         <div className='duration'
                             style={{
                                 bottom: 0, right:0, position: 'absolute', margin: '4px', 
@@ -66,7 +66,7 @@ function SubscriptionPage() {
 
     return (
         <div style={{ width: '85%', margin: '3rem auto' }}>
-        <Title level={2} > Recommended </Title>
+        <Title level={2} > Subscription </Title>
         <hr />
         <Row gutter={[32, 16]}>
             

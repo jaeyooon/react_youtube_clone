@@ -1,5 +1,5 @@
 import Axios from 'axios'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'    /* functional component이므로 redux hook을 사용 */
 import SingleComment from './SingleComment'
 import ReplyComment from './ReplyComment'
@@ -42,7 +42,14 @@ function Comment(props) {
   return (
     <div>
         <br />
-        <p> Replies</p>
+        {props.commentLists.length === 0 &&
+            <p> replies</p>
+        }
+
+        {props.commentLists.length > 0 && 
+            <p> {props.commentLists.length} replies</p>
+        }
+        
         <hr />
 
         {/* Comment Lists */}
@@ -52,8 +59,8 @@ function Comment(props) {
             // ✨대댓글이 없는 댓글일 경우에만 화면에 나타나도록
             (!comment.responseTo &&
                 <React.Fragment>
-                    <SingleComment refreshFunction={props.refreshFunction} comment={comment} postId={videoId} />   {/* SingleComment 컴포넌트 */}
-                    <ReplyComment parentCommentId={comment._id} postId={videoId} commentLists={props.commentLists} refreshFunction={props.refreshFunction} />  {/* 부모 컴포넌트로부터 props를 통해 parentCommentId & videoId & 비디오에 대한 모든 댓글 데이터를 받아옴 */}
+                    <SingleComment refreshDeleteFunction={props.refreshDeleteFunction} refreshFunction={props.refreshFunction} comment={comment} postId={videoId} />   {/* SingleComment 컴포넌트 */}
+                    <ReplyComment refreshDeleteFunction={props.refreshDeleteFunction} parentCommentId={comment._id} postId={videoId} commentLists={props.commentLists} refreshFunction={props.refreshFunction} />  {/* 부모 컴포넌트로부터 props를 통해 parentCommentId & videoId & 비디오에 대한 모든 댓글 데이터를 받아옴 */}
                 </React.Fragment>
             )
             
@@ -63,16 +70,16 @@ function Comment(props) {
        
 
         {/* Root Comment Form */}
-
+        <br/>
         <form style={{ display: 'flex' }} onSubmit={onSubmit}>
-            <textarea 
+            <textarea class="form-control" rows="2"
                 style={{ width: '100%', borderRadius: '5px' }}
                 onChange={handleClick}    //comment를 타이핑하여 작성할 때마다 반응이 나타나도록 
                 value={commentValue}
                 placeholder='코멘트를 작성해주세요.'
             />
             <br />
-            <button style={{ width: '20%', height: '52px' }} onClick={onSubmit}>Submit</button>
+            <button type="button" class="btn btn-secondary" style={{fontSize:'15px'}} onClick={onSubmit}>Submit</button>
         </form>
     </div>
   )

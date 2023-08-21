@@ -114,6 +114,23 @@ router.post('/getSubscriptionVideos', (req, res) => {
 });
 
 
+router.post('/updateViews', (req, res) => {
+
+    Video.findById(req.body.videoId)
+    .populate('writer')
+    .exec((err, video) => {
+        if(err) return res.status(400).json({ success: false, err })
+
+        video.views++
+        video.save((err, video) => {
+            if(err) return res.status(400).json({ success: false, err }) 
+            return res.status(200).json({ success: true, views: video.views })              
+        })
+    })
+
+});
+
+
 router.post('/thumbnail', (req, res) => {
     
     // 썸네일 생성하고 비디오 러닝타임도 가져오기

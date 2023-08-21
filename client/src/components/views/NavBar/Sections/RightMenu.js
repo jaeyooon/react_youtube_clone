@@ -5,6 +5,8 @@ import axios from 'axios';
 import { USER_SERVER } from '../../../Config';
 import { withRouter } from 'react-router-dom';
 import { useSelector } from "react-redux";
+import { Avatar } from 'antd'
+
 
 function RightMenu(props) {
   const user = useSelector(state => state.user)
@@ -23,7 +25,7 @@ function RightMenu(props) {
     return (
       <Menu mode={props.mode}>
         <Menu.Item key="mail">
-          <a href="/login">Signin</a>
+          <a href="/login" style={{marginTop:'10px'}}>Signin</a>
         </Menu.Item>
         <Menu.Item key="app">
           <a href="/register">Signup</a>
@@ -34,10 +36,22 @@ function RightMenu(props) {
     return (
       <Menu mode={props.mode}>
         <Menu.Item key="upload">
-          <a href="/video/upload">Video</a>
+          <a href="/video/upload">
+              <span class="material-symbols-outlined" style={{display: 'flex', alignItems: 'center', marginBottom: '10px'}}>
+                video_call
+              </span>
+          </a>
         </Menu.Item>
         <Menu.Item key="logout">
-          <a onClick={logoutHandler}>Logout</a>
+          <a onClick={logoutHandler} style={{marginTop:'10px'}}>Logout</a>
+        </Menu.Item>
+        <Menu.Item>
+            { user.userData &&
+            <div style={{ marginBottom: '10px' }}>
+                <Avatar src={user.userData.image} alt />
+                <span style={{ marginLeft: '10px', marginBottom: '10px' }}>{user.userData.name}</span>
+            </div>
+            }
         </Menu.Item>
       </Menu>
     )

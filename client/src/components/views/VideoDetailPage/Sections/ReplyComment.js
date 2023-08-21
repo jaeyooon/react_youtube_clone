@@ -28,8 +28,8 @@ function ReplyComment(props) {
                 {
                     comment.responseTo === (parentCommentId) &&   // ✨responseTo가 없는 1번째 depth 코멘트는 대상이 될 수 없음
                     <div style={{ width: '80%', marginLeft: '40px' }}>
-                        <SingleComment refreshFunction={props.refreshFunction} comment={comment} postId={props.postId} />   
-                        <ReplyComment commentLists={props.commentLists} postId={props.postId} parentCommentId={comment._id} refreshFunction={props.refreshFunction}/>  {/* 부모 컴포넌트로부터 props를 통해 비디오에 대한 모든 댓글 데이터를 받아옴 */}
+                        <SingleComment refreshDeleteFunction={props.refreshDeleteFunction} refreshFunction={props.refreshFunction} comment={comment} postId={props.postId} />   
+                        <ReplyComment refreshDeleteFunction={props.refreshDeleteFunction} commentLists={props.commentLists} postId={props.postId} parentCommentId={comment._id} refreshFunction={props.refreshFunction}/>  {/* 부모 컴포넌트로부터 props를 통해 비디오에 대한 모든 댓글 데이터를 받아옴 */}
                     </div>
                 
                 }

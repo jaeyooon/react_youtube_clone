@@ -18,7 +18,9 @@ function NavBar() {
   return (
     <nav className="menu" style={{ position: 'fixed', zIndex: 5, width: '100%' }}>
       <div className="menu__logo">
-        <a href="/">Logo</a>
+        <a href="/">
+          <img src="https://www.gstatic.com/youtube/img/promos/growth/4a320a07683baceac3be5fb585a9beb0d3189f677d30410a534fb0757f1fe5d8_122x56.webp" height={40} style={{marginBottom: '5px'}}/>
+        </a>
       </div>
       <div className="menu__container">
         <div className="menu_left">

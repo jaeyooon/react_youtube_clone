@@ -33,9 +33,19 @@ router.post('/getComments', (req, res) => {
         if(err) return res.status(400).send(err)
         res.status(200).json({ success: true, comments })
    })
-
+ 
 });
 
+
+router.post('/deleteComment', (req, res) => {
+    
+    Comment.deleteOne({_id: req.body.commentId})
+    .exec((err, result) => {
+        if(err) res.json({success: false, err})
+        return res.status(200).json({ success: true})
+    })
+
+});
 
 
 
