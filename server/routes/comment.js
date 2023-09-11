@@ -36,11 +36,20 @@ router.post('/getComments', (req, res) => {
  
 });
 
+router.post('/deleteUpdateComment', (req, res) => {
+    
+    Comment.update({_id: req.body.commentId}, {content: '삭제된 댓글입니다.'})
+    .exec((err) => {
+        if(err) res.json({success: false, err})
+        res.status(200).json({ success: true})
+    })
+
+});
 
 router.post('/deleteComment', (req, res) => {
     
     Comment.deleteOne({_id: req.body.commentId})
-    .exec((err, result) => {
+    .exec((err) => {
         if(err) res.json({success: false, err})
         return res.status(200).json({ success: true})
     })

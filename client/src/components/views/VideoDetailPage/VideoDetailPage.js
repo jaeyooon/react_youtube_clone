@@ -54,22 +54,40 @@ function VideoDetailPage(props) {
 
     const refreshDeleteFunction = (targetCommentId) => {    // ✨DB에서 댓글을 삭제한 후에 state에서도 해당 댓글을 지워줘야하므로
 
-            // if(Comments.find((comment) => comment.responseTo === targetCommentId)) {
-            //     Comments.map((comment) => 
-            //     comment._id === targetCommentId
-            //        ? comment.content = "삭제된 댓글입니다." 
-            //        : comment
-            //     )
-            //     let newCommentList = [...Comments]
-            //     setComments(newCommentList)
-            // } else {
-                if(Comments.find((comment) => comment._id === targetCommentId)) {
-                    let newCommentList2 = [...Comments]
-                    newCommentList2 = Comments.filter((comment) => comment._id !== targetCommentId)
-                    setComments(newCommentList2)
-                }
-            // }
+        const variable = { commentId: targetCommentId }
 
+            if(Comments.find((comment) => comment.responseTo === variable.commentId)) {    // 대댓글이 있는 경우
+                
+                Axios.post('/api/comment/deleteUpdateComment', variable)
+                    .then(response => {
+                        if(response.data.success) {
+                            Comments.map((comment) => 
+                            comment._id === variable.commentId
+                            ? comment.content = "삭제된 댓글입니다." 
+                            : comment
+                            )
+                            let newCommentList = [...Comments]
+                            setComments(newCommentList)
+                        } else {
+                            alert('Error !!')
+                        }
+                    })                
+            } 
+            else {
+                if(Comments.find((comment) => comment._id === variable.commentId)) {
+
+                    Axios.post('/api/comment/deleteComment', variable) 
+                    .then(response => {
+                        if(response.data.success) {
+                            let newCommentList2 = [...Comments]
+                            newCommentList2 = Comments.filter((comment) => comment._id !== variable.commentId)
+                            setComments(newCommentList2)
+                        } else {
+                            alert('댓글을 삭제하지 못했습니다.')
+                        }
+                    }) 
+                }
+            }
     }
 
     if(VideoDetail.writer) {

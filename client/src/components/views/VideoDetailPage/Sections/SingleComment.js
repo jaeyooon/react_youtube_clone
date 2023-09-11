@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Comment, Avatar, Button, Input } from 'antd';
+import { Comment, Avatar, Input } from 'antd';
 import Axios from 'axios';
 import { useSelector } from 'react-redux'
 import LikeDislikes from './LikeDislikes';
@@ -51,17 +51,8 @@ function SingleComment(props) {
 
         let confirmRes = window.confirm('댓글을 삭제하시겠습니까?')
 
-        if(confirmRes) {
-            const variable = { commentId: targetCommentId }
-
-                Axios.post('/api/comment/deleteComment', variable) 
-                .then(response => {
-                    if(response.data.success) {
-                        props.refreshDeleteFunction(variable.commentId)
-                    } else {
-                        alert('댓글을 삭제하지 못했습니다.')
-                    }
-                })
+        if(confirmRes) {            
+            props.refreshDeleteFunction(targetCommentId)      
         }
 
     }
@@ -77,16 +68,16 @@ function SingleComment(props) {
             <Comment 
                 actions={actions}
                 author={props.comment.writer.name}
-                avatar={<Avatar src={props.comment.writer.image} alt />}
+                avatar={<Avatar src={props.comment.writer.image} alt="writer_image" />}
                 content={<p> {props.comment.content}</p>}   
             />
 
             {   user.userData &&
                 user.userData._id === props.comment.writer._id &&      // 현재 로그인한 유저 본인이 작성한 댓글에 대해서만 삭제할 수 있도록!
                 
-                <button type="button" class="btn btn-light btn-sm" onClick={() => onDeleteComment(props.comment._id)} 
+                <button type="button" className="btn btn-light btn-sm" onClick={() => onDeleteComment(props.comment._id)} 
                 style={{display:'flex', alignItems:'center', marginLeft: '30px', marginBottom:'10px', fontSize:'14px'}}>
-                    <span class="material-symbols-outlined" style={{fontSize:'20px'}}>delete</span>
+                    <span className="material-symbols-outlined" style={{fontSize:'20px'}}>delete</span>
                     delete
                 </button>
             }
@@ -95,14 +86,14 @@ function SingleComment(props) {
 
             {OpenReply &&       // OpenReply가 true일 때만 댓글 창이 열리도록
                 <form style={{ display: 'flex' }} onSubmit={onSubmit}>
-                <textarea class="form-control" rows="2"
+                <textarea className="form-control" rows="2"
                     style={{ width: '100%', borderRadius: '5px' }}
                     onChange={onHandleChange}    //comment를 타이핑하여 작성할 때마다 반응이 나타나도록 
                     value={CommentValue}
                     placeholder='코멘트를 작성해주세요.'
                 />
                 <br />
-                <button type="button" class="btn btn-secondary" style={{fontSize:'15px'}} onClick={onSubmit} >Submit</button>
+                <button type="button" className="btn btn-secondary" style={{fontSize:'15px'}} onClick={onSubmit} >Submit</button>
                 </form>
             }
             

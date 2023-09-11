@@ -31,7 +31,7 @@ function LandingPage() {
         var minutes = Math.floor(video.duration / 60);
         var seconds = Math.floor(video.duration - minutes * 60);
 
-        return <Col lg={6} md={8} xs={24}>  {/*24사이즈가 전체 열 사이즈*/}           
+        return <Col key={index} lg={6} md={8} xs={24}>  {/*24사이즈가 전체 열 사이즈*/}           
                 <div style={{ position: 'relative' }}>
                     <a href={`/video/${video._id}`} > {/* 하나의 비디오에 해당하는 페이지로 이동하도록 video._id를 이용해서 링크를 걸어둠*/}
                         <img style={{ width: '100%', borderRadius: '10px' }} src={`http://localhost:5000/${video.thumbnail}`} alt="thumbnail" />

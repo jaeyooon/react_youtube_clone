@@ -37,7 +37,7 @@ function RightMenu(props) {
       <Menu mode={props.mode}>
         <Menu.Item key="upload">
           <a href="/video/upload">
-              <span class="material-symbols-outlined" style={{display: 'flex', alignItems: 'center', marginBottom: '10px'}}>
+              <span className="material-symbols-outlined" style={{display: 'flex', alignItems: 'center', marginBottom: '10px'}}>
                 video_call
               </span>
           </a>
@@ -48,7 +48,7 @@ function RightMenu(props) {
         <Menu.Item>
             { user.userData &&
             <div style={{ marginBottom: '10px' }}>
-                <Avatar src={user.userData.image} alt />
+                <Avatar src={user.userData.image} alt="user_image" />
                 <span style={{ marginLeft: '10px', marginBottom: '10px' }}>{user.userData.name}</span>
             </div>
             }
